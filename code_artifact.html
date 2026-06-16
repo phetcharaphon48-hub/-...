@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สนุกกับมาตราตัวสะกดไทย</title>
+    <!-- Tailwind CSS สำหรับการจัดรูปแบบ (Responsive & UI) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome สำหรับไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Mali (ฟอนต์น่ารักสำหรับเด็ก) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Mali', cursive;
+            background-color: #f0fdf4; /* สีเขียวอ่อนพาสเทล */
+            scroll-behavior: smooth;
+        }
+        
+        .cartoon-emoji {
+            font-size: 4rem;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .cartoon-emoji {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        /* ซ่อน Scrollbar แต่ยังเลื่อนได้ */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fbcfe8; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f472b6; 
+        }
+
+        .correct-answer { background-color: #dcfce7 !important; border-color: #22c55e !important; }
+        .wrong-answer { background-color: #fee2e2 !important; border-color: #ef4444 !important; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased relative">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="glass-panel mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-2 rounded-full shadow-md">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="text-3xl">🇹🇭</span>
+                    <span class="font-bold text-xl text-pink-600">มาตราตัวสะกด</span>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#meaning" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-100 px-3 py-2 rounded-md font-semibold transition">ความหมาย</a>
+                        <a href="#vocab" class="text-gray-700 hover:text-pink-600 hover:bg-pink-100 px-3 py-2 rounded-md font-semibold transition">คำศัพท์น่ารู้</a>
+                        <a href="#game" class="text-gray-700 hover:text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-md font-semibold transition">เกมสนุกๆ</a>
+                        <a href="#quiz" class="text-gray-700 hover:text-green-600 hover:bg-green-100 px-3 py-2 rounded-md font-semibold transition">แบบฝึกหัด</a>
+                        <a href="#developers" class="text-gray-700 hover:text-purple-600 hover:bg-purple-100 px-3 py-2 rounded-md font-semibold transition">ผู้พัฒนา</a>
+                    </div>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-pink-600 hover:bg-pink-100 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden glass-panel mx-4 mt-2 rounded-2xl" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#meaning" onclick="toggleMobileMenu()" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-100 px-3 py-2 rounded-md font-semibold">ความหมาย</a>
+                <a href="#vocab" onclick="toggleMobileMenu()" class="block text-gray-700 hover:text-pink-600 hover:bg-pink-100 px-3 py-2 rounded-md font-semibold">คำศัพท์น่ารู้</a>
+                <a href="#game" onclick="toggleMobileMenu()" class="block text-gray-700 hover:text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-md font-semibold">เกมสนุกๆ</a>
+                <a href="#quiz" onclick="toggleMobileMenu()" class="block text-gray-700 hover:text-green-600 hover:bg-green-100 px-3 py-2 rounded-md font-semibold">แบบฝึกหัด</a>
+                <a href="#developers" onclick="toggleMobileMenu()" class="block text-gray-700 hover:text-purple-600 hover:bg-purple-100 px-3 py-2 rounded-md font-semibold">ผู้พัฒนา</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-32 pb-20 px-4 text-center bg-gradient-to-b from-pink-100 to-[#f0fdf4]">
+        <h1 class="text-4xl md:text-6xl font-bold text-pink-500 mb-6 drop-shadow-sm">
+            ท่องโลก <span class="text-blue-500">มาตราตัวสะกดไทย</span>
+        </h1>
+        <p class="text-lg md:text-2xl text-gray-600 max-w-2xl mx-auto mb-8">
+            มาเรียนรู้คำศัพท์ ฟังเสียง อ่านภาษาอังกฤษ และเล่นเกมสนุกๆ ไปด้วยกันเถอะ! ✨
+        </p>
+        <a href="#meaning" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-3 px-8 rounded-full text-xl shadow-lg transform hover:scale-105 transition">
+            เริ่มเรียนกันเลย! <i class="fas fa-rocket ml-2"></i>
+        </a>
+    </header>
+
+    <!-- Meaning Section -->
+    <section id="meaning" class="py-16 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-5xl font-bold text-indigo-600 mb-4"><i class="fas fa-lightbulb mr-3 text-yellow-400"></i> มาตราตัวสะกดคืออะไร?</h2>
+            <p class="text-gray-700 text-xl max-w-3xl mx-auto leading-relaxed glass-panel p-6 rounded-3xl mt-6">
+                <strong class="text-pink-500 text-2xl">มาตราตัวสะกด</strong> คือ พยัญชนะที่อยู่ท้ายคำหรือพยางค์ ทำหน้าที่บังคับเสียงให้เป็นไปตามมาตราต่างๆ ซึ่งมีทั้งหมด <strong class="text-blue-600 text-3xl">8</strong> มาตราจ้า และมี <strong class="text-orange-500 text-2xl">แม่ ก กา</strong> ซึ่งเป็นคำที่ไม่มีตัวสะกด แบ่งง่ายๆ ดังนี้เลย 👇
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Box 1 -->
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-100 p-8 rounded-3xl shadow-lg border-2 border-orange-200 transform hover:-translate-y-2 transition duration-300">
+                <div class="text-6xl mb-4 text-center">🐣</div>
+                <h3 class="text-2xl font-bold text-orange-600 mb-2 text-center">ไม่มีตัวสะกด</h3>
+                <p class="text-lg text-gray-700 mb-4 text-center border-b-2 border-orange-200 pb-4">ไม่นับเป็นมาตราตัวสะกด คือ</p>
+                <div class="flex justify-center">
+                    <div class="bg-white/80 py-3 px-6 rounded-2xl text-xl font-bold text-orange-700 shadow-sm w-full text-center">แม่ ก กา</div>
+                </div>
+                <p class="text-sm text-gray-600 text-center mt-4">*(คำที่ประสมด้วยสระเท่านั้น ไม่มีตัวสะกดตามหลัง)</p>
+            </div>
+
+            <!-- Box 2 -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-100 p-8 rounded-3xl shadow-lg border-2 border-green-200 transform hover:-translate-y-2 transition duration-300">
+                <div class="text-6xl mb-4 text-center">🎯</div>
+                <h3 class="text-2xl font-bold text-green-600 mb-2 text-center">ตรงตามมาตรา</h3>
+                <p class="text-lg text-gray-700 mb-4 text-center border-b-2 border-green-200 pb-4">มี 4 มาตรา คือ</p>
+                <div class="grid grid-cols-2 gap-3 text-center text-lg font-bold text-green-700">
+                    <div class="bg-white/80 py-2 rounded-xl shadow-sm">แม่กง (ง)</div>
+                    <div class="bg-white/80 py-2 rounded-xl shadow-sm">แม่กม (ม)</div>
+                    <div class="bg-white/80 py-2 rounded-xl shadow-sm">แม่เกย (ย)</div>
+                    <div class="bg-white/80 py-2 rounded-xl shadow-sm">แม่เกอว (ว)</div>
+                </div>
+                <p class="text-sm text-gray-600 text-center mt-4">*(ใช้ตัวสะกดเพียงตัวเดียวเท่านั้น)</p>
+            </div>
+
+            <!-- Box 3 -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-100 p-8 rounded-3xl shadow-lg border-2 border-blue-200 transform hover:-translate-y-2 transition duration-300">
+                <div class="text-6xl mb-4 text-center">🎭</div>
+                <h3 class="text-2xl font-bold text-blue-600 mb-2 text-center">ไม่ตรงตามมาตรา</h3>
+                <p class="text-lg text-gray-700 mb-4 text-center border-b-2 border-blue-200 pb-4">มี 4 มาตรา คือ</p>
+                <div class="grid grid-cols-2 gap-3 text-center text-lg font-bold text-blue-700">
+                    <div class="bg-white/80 py-2 rounded-xl shadow-sm">แม่กน</div>
+                    <div class="bg-white/80 py-2 rounded-xl shadow-sm">แม่กก</div>
+                    <div class="bg-white/80 py-2 rounded-xl shadow-sm">แม่กด</div>
+                    <div class="bg-white/80 py-2 rounded-xl shadow-sm">แม่กบ</div>
+                </div>
+                <p class="text-sm text-gray-600 text-center mt-4">*(มีพยัญชนะที่เป็นตัวสะกดได้หลายตัว)</p>
+            </div>
+        </div>
+
+        <!-- รายละเอียดมาตราตัวสะกด ๘ มาตรา -->
+        <div class="mt-16 bg-white/60 p-8 rounded-3xl shadow-sm border border-gray-100 glass-panel">
+            <h3 class="text-2xl md:text-4xl font-bold text-pink-600 mb-8 text-center"><i class="fas fa-star text-yellow-400 mr-2"></i> สรุปมาตราตัวสะกด ๘ มาตรา และ แม่ ก กา <i class="fas fa-star text-yellow-400 ml-2"></i></h3>
+            
+            <!-- แบบไม่มีตัวสะกด -->
+            <div class="mb-8">
+                <h4 class="text-2xl font-bold text-orange-600 mb-4 flex items-center"><span class="text-3xl mr-2">🌟</span> แบบไม่มีตัวสะกด</h4>
+                <div class="bg-orange-50 p-6 rounded-2xl shadow-sm border-l-8 border-orange-400 transform hover:scale-[1.02] transition">
+                    <h4 class="text-xl font-bold text-orange-700">แม่ ก กา</h4>
+                    <p class="text-orange-800 mt-2 text-lg">คำที่ไม่มีพยัญชนะเป็นตัวสะกด ประสมด้วยสระ และพยัญชนะต้น</p>
+                    <div class="mt-3 bg-white/60 p-3 rounded-xl inline-block border border-orange-200">
+                        <span class="font-bold text-orange-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">ตา, ปู, ใจ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- แบบมีตัวสะกดตรงมาตรา -->
+            <div class="mb-8">
+                <h4 class="text-2xl font-bold text-green-600 mb-4 flex items-center"><span class="text-3xl mr-2">🔗</span> 1. ตัวสะกดตรงมาตรา (มีตัวสะกดตัวเดียว)</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-green-50 p-6 rounded-2xl shadow-sm border-l-8 border-green-400 transform hover:scale-[1.02] transition">
+                        <h4 class="text-xl font-bold text-green-700">แม่ กง</h4>
+                        <p class="text-green-800 mt-2 text-lg">ใช้ <strong class="text-2xl">ง</strong> สะกด</p>
+                        <div class="mt-3 bg-white/60 p-3 rounded-xl border border-green-200">
+                            <span class="font-bold text-green-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">ลิง, สอง, กางเกง</span>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-2xl shadow-sm border-l-8 border-green-400 transform hover:scale-[1.02] transition">
+                        <h4 class="text-xl font-bold text-green-700">แม่ กม</h4>
+                        <p class="text-green-800 mt-2 text-lg">ใช้ <strong class="text-2xl">ม</strong> สะกด</p>
+                        <div class="mt-3 bg-white/60 p-3 rounded-xl border border-green-200">
+                            <span class="font-bold text-green-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">ส้ม, ยิ้ม, สนาม</span>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-2xl shadow-sm border-l-8 border-green-400 transform hover:scale-[1.02] transition">
+                        <h4 class="text-xl font-bold text-green-700">แม่ เกย</h4>
+                        <p class="text-green-800 mt-2 text-lg">ใช้ <strong class="text-2xl">ย</strong> สะกด</p>
+                        <div class="mt-3 bg-white/60 p-3 rounded-xl border border-green-200">
+                            <span class="font-bold text-green-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">เนย, สร้อย, กล้วย</span>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-2xl shadow-sm border-l-8 border-green-400 transform hover:scale-[1.02] transition">
+                        <h4 class="text-xl font-bold text-green-700">แม่ เกอว</h4>
+                        <p class="text-green-800 mt-2 text-lg">ใช้ <strong class="text-2xl">ว</strong> สะกด</p>
+                        <div class="mt-3 bg-white/60 p-3 rounded-xl border border-green-200">
+                            <span class="font-bold text-green-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">แมว, แก้ว, หิว</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- แบบมีตัวสะกดไม่ตรงมาตรา -->
+            <div>
+                <h4 class="text-2xl font-bold text-blue-600 mb-4 flex items-center"><span class="text-3xl mr-2">🎭</span> 2. ตัวสะกดไม่ตรงมาตรา (ออกเสียงเหมือนมีตัวสะกดหลัก)</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 p-6 rounded-2xl shadow-sm border-l-8 border-blue-400 transform hover:scale-[1.02] transition">
+                        <h4 class="text-xl font-bold text-blue-700">แม่ กก</h4>
+                        <p class="text-blue-800 mt-2 text-lg">ออกเสียงเหมือน <strong class="text-2xl">ก</strong> สะกด</p>
+                        <p class="text-sm text-blue-600 mt-1">(ตัวสะกด: ก, ข, ค, ฆ)</p>
+                        <div class="mt-3 bg-white/60 p-3 rounded-xl border border-blue-200">
+                            <span class="font-bold text-blue-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">นก, เลข, สุนัข</span>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-2xl shadow-sm border-l-8 border-blue-400 transform hover:scale-[1.02] transition">
+                        <h4 class="text-xl font-bold text-blue-700">แม่ กด</h4>
+                        <p class="text-blue-800 mt-2 text-lg">ออกเสียงเหมือน <strong class="text-2xl">ด</strong> สะกด</p>
+                        <p class="text-sm text-blue-600 mt-1">(ตัวสะกด: ด, จ, ช, ซ, ฎ, ฏ, ฐ, ฑ, ฒ, ต, ถ, ท, ธ, ศ, ษ, ส)</p>
+                        <div class="mt-3 bg-white/60 p-3 rounded-xl border border-blue-200">
+                            <span class="font-bold text-blue-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">มด, ตำรวจ, ก๊าซ</span>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-2xl shadow-sm border-l-8 border-blue-400 transform hover:scale-[1.02] transition">
+                        <h4 class="text-xl font-bold text-blue-700">แม่ กน</h4>
+                        <p class="text-blue-800 mt-2 text-lg">ออกเสียงเหมือน <strong class="text-2xl">น</strong> สะกด</p>
+                        <p class="text-sm text-blue-600 mt-1">(ตัวสะกด: น, ญ, ณ, ร, ล, ฬ)</p>
+                        <div class="mt-3 bg-white/60 p-3 rounded-xl border border-blue-200">
+                            <span class="font-bold text-blue-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">บ้าน, วาฬ, เหรียญ</span>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-2xl shadow-sm border-l-8 border-blue-400 transform hover:scale-[1.02] transition">
+                        <h4 class="text-xl font-bold text-blue-700">แม่ กบ</h4>
+                        <p class="text-blue-800 mt-2 text-lg">ออกเสียงเหมือน <strong class="text-2xl">บ</strong> สะกด</p>
+                        <p class="text-sm text-blue-600 mt-1">(ตัวสะกด: บ, ป, พ, ฟ, ภ)</p>
+                        <div class="mt-3 bg-white/60 p-3 rounded-xl border border-blue-200">
+                            <span class="font-bold text-blue-600">ตัวอย่างคำ:</span> <span class="text-gray-700 text-lg">กบ, รูป, ยีราฟ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vocabulary Section -->
+    <section id="vocab" class="py-16 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-5xl font-bold text-pink-600 mb-4"><i class="fas fa-book-open mr-3"></i> คำศัพท์น่ารู้</h2>
+            <p class="text-gray-600 text-lg">กดปุ่มลำโพงเพื่อฟังเสียงนะ</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="vocab-container">
+            <!-- ข้อมูลคำศัพท์จะถูกสร้างด้วย JavaScript -->
+        </div>
+    </section>
+
+    <!-- Game Section -->
+    <section id="game" class="py-16 px-4 bg-gradient-to-br from-blue-100 to-purple-100">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-5xl font-bold text-blue-600 mb-4"><i class="fas fa-gamepad mr-3"></i> เกมทายมาตราตัวสะกด</h2>
+            <p class="text-gray-700 text-lg mb-8">ดูคำศัพท์แล้วเลือกมาตราตัวสะกดให้ถูกต้องนะ สะสมคะแนนกันเถอะ!</p>
+
+            <div class="glass-panel p-8 rounded-3xl shadow-xl">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-xl font-bold text-purple-600">ข้อที่: <span id="game-progress">1/5</span></span>
+                    <span class="text-xl font-bold text-green-600">คะแนน: <span id="game-score">0</span> ⭐️</span>
+                </div>
+
+                <div id="game-content">
+                    <div class="text-6xl mb-4" id="game-emoji">🤔</div>
+                    <h3 class="text-4xl font-bold text-gray-800 mb-8" id="game-word">คำศัพท์</h3>
+                    <div class="grid grid-cols-2 gap-4" id="game-choices">
+                        <!-- ปุ่มตัวเลือกจะมาตรงนี้ -->
+                    </div>
+                </div>
+
+                <div id="game-result" class="hidden py-8">
+                    <h3 class="text-4xl font-bold text-pink-500 mb-4">จบเกมแล้ว! 🎉</h3>
+                    <p class="text-2xl mb-6">หนูทำได้: <span id="final-score" class="text-green-500 font-bold"></span> คะแนน</p>
+                    <button onclick="startGame()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg transition">
+                        เล่นอีกครั้ง <i class="fas fa-redo ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="py-16 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-5xl font-bold text-green-600 mb-4"><i class="fas fa-pencil-alt mr-3"></i> แบบฝึกหัดท้ายบท</h2>
+            <p class="text-gray-600 text-lg">ลองทำแบบฝึกหัดดูนะ ทำเสร็จแล้วกดตรวจคำตอบด้านล่างได้เลย!</p>
+        </div>
+
+        <div class="space-y-8" id="quiz-container">
+            <!-- ข้อสอบจะถูกสร้างด้วย JavaScript -->
+        </div>
+
+        <div class="text-center mt-12">
+            <button id="submit-quiz" onclick="checkQuiz()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full text-2xl shadow-xl transform hover:-translate-y-1 transition">
+                ตรวจคำตอบ <i class="fas fa-check-circle ml-2"></i>
+            </button>
+            <div id="quiz-result" class="mt-8 text-3xl font-bold hidden">
+                คะแนนที่ได้: <span id="quiz-score-display" class="text-pink-600"></span>/10 🌟
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Developer Credits -->
+    <footer id="developers" class="bg-gray-800 text-white py-12 rounded-t-3xl mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h3 class="text-2xl font-bold mb-6 text-pink-400"><i class="fas fa-code mr-2"></i> คณะผู้พัฒนาเว็บไซต์</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-lg text-gray-300">
+                <p>1. นางสาว ปวันรัตน์ ยิ่งขจร</p>
+                <p>2. ธัญญาลักษณ์ สุขวิทย์</p>
+                <p>3. นาย สิปปนันท์ ยิ่งขจร</p>
+                <p>4. นางสาว ปวันรัตน์ ยิ่งขจร</p>
+                <p>5. นางสาว พินธุยา เกตุแก้ว</p>
+                <p>6. นางสาว เพชราภรณ์ เห็มทอง</p>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-gray-400">
+                <p>&copy; 2026 สื่อการเรียนรู้มาตราตัวสะกดไทย | พัฒนาด้วย ❤️ เพื่อเด็กๆ</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // === ข้อมูลคำศัพท์ ===
+        const vocabData = [
+            { id: 1, th: "กระดูก", en: "Bone", spelling: "กอ - รอ - อะ - กระ - ดอ - อู - กอ - ดูก", desc: "มาตราแม่กก (สะกดด้วย ก)", icon: "🦴", color: "bg-red-50 text-red-600", audio: "กระดูก.m4a" },
+            { id: 2, th: "กระถาง", en: "Pot", spelling: "กอ - รอ - อะ - กระ - ถอ - อา - งอ - ถาง", desc: "มาตราแม่กง (สะกดด้วย ง)", icon: "🪴", color: "bg-green-50 text-green-600", audio: "กระถาง.m4a" },
+            { id: 3, th: "กะลา", en: "Coconut shell", spelling: "กอ - อะ - กะ - ลอ - อา - ลา", desc: "มาตราแม่กา (ไม่มีตัวสะกด)", icon: "🥥", color: "bg-amber-50 text-amber-700", audio: "กะลา.m4a" },
+            { id: 4, th: "ต้นเข็ม", en: "Needle flower", spelling: "ตอ - โอ - นอ - ตน - ไม้โท - ต้น - ขอ - เอะ - มอ - เข็ม", desc: "มาตราแม่เกย (คำว่า 'ต้น' อยู่ในแม่กน / คำว่า 'เข็ม' อยู่ในแม่กม)", icon: "🌺", color: "bg-pink-50 text-pink-600", audio: "ต้นเข็ม (1).m4a" },
+            { id: 5, th: "ห่าน", en: "Goose", spelling: "หอ - อา - นอ - หาน - ไม้เอก - ห่าน", desc: "มาตราแม่กน (สะกดด้วย น)", icon: "🦆", color: "bg-orange-50 text-orange-600", audio: "ห่าน.m4a" },
+            { id: 6, th: "ชะนี", en: "Gibbon", spelling: "ชอ - อะ - ชะ - นอ - อี - นี", desc: "มาตราแม่กา (ไม่มีตัวสะกด ทั้งคำว่า 'ชะ' และ 'นี')", icon: "🐵", color: "bg-stone-50 text-stone-600", audio: "ชะนี (1).m4a" },
+            { id: 7, th: "น้ำอ้อย", en: "Sugarcane juice", spelling: "นอ - อำ - นำ - ไม้โท - น้ำ - ออ - ออ - ยอ - ออย - ไม้โท - อ้อย", desc: "คำว่า 'น้ำ' อยู่ในแม่กา / คำว่า 'อ้อย' อยู่ในมาตราแม่เกย (สะกดด้วย ย)", icon: "🧋", color: "bg-yellow-50 text-yellow-700", audio: "น้ำอ้อย.m4a" },
+            { id: 8, th: "ตะเกียบ", en: "Chopsticks", spelling: "ตอ - อะ - ตะ - กอ - เอีย - บอ - เกียบ", desc: "มาตราแม่กบ (สะกดด้วย บ)", icon: "🥢", color: "bg-slate-50 text-slate-600", audio: "ตะเกียบ.m4a" },
+            { id: 9, th: "ว่าว", en: "Kite", spelling: "วอ - อา - วอ - วาว - ไม้เอก - ว่าว", desc: "มาตราแม่เกอว (สะกดด้วย ว)", icon: "🪁", color: "bg-blue-50 text-blue-600", audio: "ว่าว.m4a" },
+            { id: 10, th: "ข้าวโพด", en: "Corn", spelling: "ขอ - อา - วอ - ขาว - ไม้โท - ข้าว - พอ - โอ - ดอ - โพด", desc: "คำว่า 'ข้าว' อยู่ในแม่เกอว / คำว่า 'โพด' อยู่ในมาตราแม่กด (สะกดด้วย ด)", icon: "🌽", color: "bg-yellow-100 text-yellow-800", audio: "ข้าวโพด (1).m4a" }
+        ];
+
+        // === ข้อมูลแบบฝึกหัด (จากโจทย์) ===
+        const quizData = [
+            {
+                q: "1.) คำว่า 'กางเกง' มีตัวสะกดอยู่ในมาตราใด และเป็นแบบตรงตามมาตราหรือไม่?",
+                choices: ["แม่กง (ตรงตามมาตรา)", "แม่เกย (ตรงตามมาตรา)", "แม่กน (ตรงตามมาตรา)", "แม่กม (ไม่ตรงตามมาตรา)"],
+                ans: 0 // ก
+            },
+            {
+                q: "2.) ข้อใดเป็นคำในมาตรา 'แม่กม' ที่สะกดตรงตามมาตราทุกคำ?",
+                choices: ["ส้ม, ยิ้ม", "พัด, กด", "กวาง, หาง", "ปาก, รัก"],
+                ans: 0 // ก
+            },
+            {
+                q: "3.) คำว่า 'กล้วย' สะกดด้วยมาตราใด?",
+                choices: ["แม่กก", "แม่เกย", "แม่กน", "แม่เกอว"],
+                ans: 1 // ข
+            },
+            {
+                q: "4.) คำว่า 'แมว' และ 'หิว' อยู่ในมาตราตัวสะกดใด?",
+                choices: ["แม่เกย", "แม่กง", "แม่กม", "แม่เกอว"],
+                ans: 3 // ง
+            },
+            {
+                q: "5.) ข้อใดเป็นคำในมาตรา 'แม่กน' ที่สะกดตรงตามมาตรา?",
+                choices: ["พร", "กุญแจ", "วาฬ", "บ้าน"],
+                ans: 3 // ง
+            },
+            {
+                q: "6.) คำว่า 'ความสุข' คำว่า 'สุข' อยู่ในมาตราใด และสะกดแบบใด?",
+                choices: ["แม่กก (ไม่ตรงตามมาตรา)", "แม่กก (ตรงตามมาตรา)", "แม่กบ (ไม่ตรงตามมาตรา)", "แม่กด (ไม่ตรงตามมาตรา)"],
+                ans: 0 // ก
+            },
+            {
+                q: "7.) คำในข้อใดอยู่ในมาตรา 'แม่กด' (ไม่ตรงตามมาตรา) ทั้งหมด?",
+                choices: ["กิน, เรียน", "เป็ด, มด", "รถ, ตำรวจ", "กบ, รูป"],
+                ans: 2 // ค
+            },
+            {
+                q: "8.) คำว่า 'รูปภาพ' อยู่ในมาตราตัวสะกดใด?",
+                choices: ["แม่กก", "แม่กด", "แม่กน", "แม่กบ"],
+                ans: 3 // ง
+            },
+            {
+                q: "9.) คำในมาตราแม่กนข้อใดที่สะกดด้วยตัว 'ร' (ไม่ตรงตามมาตรา)?",
+                choices: ["อาหาร", "บันได", "สัญญา", "ของขวัญ"],
+                ans: 0 // ก
+            },
+            {
+                q: "10.) ข้อใดบอกมาตราตัวสะกดของคำว่า 'เมฆ' ได้ถูกต้อง?",
+                choices: ["แม่กง", "แม่กก", "แม่กน", "แม่กด"],
+                ans: 1 // ข
+            }
+        ];
+
+        // === ระบบเสียง (Web Audio API for SFX) ===
+        // สร้างเสียงสังเคราะห์ง่ายๆ เพื่อไม่ต้องดึงไฟล์จากภายนอก
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playEffect(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                // เสียงปิ๊งป่อง (ติง)
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'wrong') {
+                // เสียงแป่ว (บัสเซอร์)
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        // === เล่นไฟล์เสียงที่อัปโหลด (.m4a) พร้อมจัดการ Error แบบนุ่มนวล ===
+        let currentVocabAudio = null;
+
+        function playVocabAudio(filename) {
+            // 1. หยุดเสียงเก่าที่กำลังเล่นอยู่ (ถ้ามี)
+            if (currentVocabAudio) {
+                currentVocabAudio.pause();
+                currentVocabAudio.currentTime = 0;
+            }
+
+            // ฟังก์ชันสำหรับจำลองการเล่นและดัก Error อย่างถูกวิธี
+            const attemptPlay = (path) => {
+                return new Promise((resolve, reject) => {
+                    const audio = new Audio(path);
+                    audio.volume = 1.0;
+                    
+                    audio.play()
+                        .then(() => {
+                            currentVocabAudio = audio;
+                            resolve();
+                        })
+                        .catch(err => reject(err));
+                });
+            };
+
+            // 2. ลองเล่นจากไฟล์ในโฟลเดอร์เดียวกันก่อน
+            attemptPlay(filename).catch((error1) => {
+                
+                // 3. หากหาไม่เจอ ให้ลองหาในโฟลเดอร์ชื่อ "มาตราตัวสะกด" (เผื่อผู้ใช้แตกไฟล์ Zip เป็นโฟลเดอร์ย่อย)
+                attemptPlay("มาตราตัวสะกด/" + filename).catch((error2) => {
+                    
+                    // แจ้งเตือนผู้ใช้ถึงสาเหตุที่แท้จริง
+                    alert("❌ เบราว์เซอร์หาไฟล์เสียง '" + filename + "' ไม่พบ!\n\n" +
+                          "สาเหตุและวิธีแก้ไข:\n" +
+                          "1. คุณกำลังเปิดจาก 'หน้าต่างพรีวิวเว็บไซต์' ซึ่งไม่สามารถดึงเสียงในเครื่องได้\n" +
+                          "2. กรุณาเซฟไฟล์เว็บ (index.html) นี้ไปไว้ในคอมพิวเตอร์ของคุณ\n" +
+                          "3. วางไฟล์เว็บไว้ในโฟลเดอร์เดียวกับไฟล์เสียง (.m4a) ทั้ง 10 ไฟล์\n" +
+                          "4. ดับเบิ้ลคลิกเปิดจากในคอมพิวเตอร์ของคุณ เสียงจึงจะดังขึ้นครับ");
+                    
+                    // ป้องกันการโชว์ Error สีแดงรกๆ ใน Console มากเกินไป
+                    console.warn(`[คำแนะนำ] กรุณาดาวน์โหลดไฟล์ index.html ไปวางคู่กับไฟล์เสียง ${filename} ในเครื่องของคุณ`);
+                });
+            });
+        }
+
+        // === เรนเดอร์หน้าจอ ===
+        
+        // 1. Render Vocab
+        function renderVocab() {
+            const container = document.getElementById('vocab-container');
+            vocabData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `card glass-panel rounded-3xl p-6 flex flex-col items-center text-center relative border-t-4 border-pink-400`;
+                
+                card.innerHTML = `
+                    <div class="w-24 h-24 flex items-center justify-center rounded-full ${item.color} mb-4">
+                        <span class="cartoon-emoji">${item.icon}</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-2xl font-bold text-gray-800">${item.id}. ${item.th}</h3>
+                        <button onclick="playVocabAudio('${item.audio}')" class="bg-pink-100 hover:bg-pink-200 text-pink-600 rounded-full w-10 h-10 flex items-center justify-center shadow transition-colors" title="ฟังเสียง">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                    </div>
+                    <p class="text-md font-bold text-purple-600 mb-2 w-full bg-purple-50 rounded-lg py-2 px-2 border border-purple-100">สะกดว่า: ${item.spelling}</p>
+                    <p class="text-lg font-semibold text-blue-500 mb-3">${item.en}</p>
+                    <div class="bg-white/60 p-3 rounded-xl w-full border border-gray-100 shadow-inner">
+                        <p class="text-sm text-gray-700 leading-relaxed">${item.desc}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 2. Game Logic
+        let currentGameIndex = 0;
+        let gameScore = 0;
+        const gameQuestions = [
+            { word: "ห่าน", icon: "🦆", choices: ["แม่กน", "แม่กก", "แม่กม", "แม่กา"], ans: "แม่กน" },
+            { word: "กะลา", icon: "🥥", choices: ["แม่กด", "แม่เกย", "แม่กา", "แม่กบ"], ans: "แม่กา" },
+            { word: "ว่าว", icon: "🪁", choices: ["แม่เกอว", "แม่กง", "แม่กน", "แม่เกย"], ans: "แม่เกอว" },
+            { word: "กระดูก", icon: "🦴", choices: ["แม่กด", "แม่กก", "แม่กบ", "แม่กม"], ans: "แม่กก" },
+            { word: "ตะเกียบ", icon: "🥢", choices: ["แม่กบ", "แม่กง", "แม่เกย", "แม่กด"], ans: "แม่กบ" }
+        ];
+
+        function startGame() {
+            currentGameIndex = 0;
+            gameScore = 0;
+            document.getElementById('game-result').classList.add('hidden');
+            document.getElementById('game-content').classList.remove('hidden');
+            updateGameScore();
+            loadGameQuestion();
+        }
+
+        function loadGameQuestion() {
+            const q = gameQuestions[currentGameIndex];
+            document.getElementById('game-progress').innerText = `${currentGameIndex + 1}/${gameQuestions.length}`;
+            document.getElementById('game-emoji').innerText = q.icon;
+            document.getElementById('game-word').innerText = q.word;
+            
+            const choicesContainer = document.getElementById('game-choices');
+            choicesContainer.innerHTML = '';
+            
+            // สลับตำแหน่งตัวเลือก (Shuffle)
+            const shuffledChoices = [...q.choices].sort(() => Math.random() - 0.5);
+            
+            shuffledChoices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white hover:bg-blue-50 text-blue-700 font-semibold py-4 px-6 rounded-2xl border-2 border-blue-200 shadow-sm transition transform hover:scale-105";
+                btn.innerText = choice;
+                btn.onclick = () => checkGameAnswer(choice, q.ans, btn);
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        function checkGameAnswer(selected, correct, btnElement) {
+            // ป้องกันกดซ้ำ
+            const buttons = document.getElementById('game-choices').querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (selected === correct) {
+                playEffect('correct');
+                btnElement.classList.remove('bg-white', 'border-blue-200', 'text-blue-700');
+                btnElement.classList.add('bg-green-400', 'text-white', 'border-green-500');
+                gameScore += 10;
+            } else {
+                playEffect('wrong');
+                btnElement.classList.remove('bg-white', 'border-blue-200', 'text-blue-700');
+                btnElement.classList.add('bg-red-400', 'text-white', 'border-red-500');
+                
+                // ไฮไลท์ข้อถูก
+                buttons.forEach(b => {
+                    if(b.innerText === correct) {
+                        b.classList.remove('bg-white', 'border-blue-200', 'text-blue-700');
+                        b.classList.add('bg-green-400', 'text-white', 'border-green-500');
+                    }
+                });
+            }
+            
+            updateGameScore();
+            
+            setTimeout(() => {
+                currentGameIndex++;
+                if (currentGameIndex < gameQuestions.length) {
+                    loadGameQuestion();
+                } else {
+                    endGame();
+                }
+            }, 1500);
+        }
+
+        function updateGameScore() {
+            document.getElementById('game-score').innerText = gameScore;
+        }
+
+        function endGame() {
+            document.getElementById('game-content').classList.add('hidden');
+            document.getElementById('game-result').classList.remove('hidden');
+            document.getElementById('final-score').innerText = gameScore;
+        }
+
+        // 3. Render Quiz
+        const choiceLetters = ['ก.', 'ข.', 'ค.', 'ง.'];
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            quizData.forEach((item, index) => {
+                const quizBox = document.createElement('div');
+                quizBox.className = "bg-white p-6 rounded-2xl shadow-md border border-gray-100 quiz-item";
+                quizBox.id = `quiz-box-${index}`;
+                
+                let choicesHTML = '';
+                item.choices.forEach((choice, cIndex) => {
+                    choicesHTML += `
+                        <label class="flex items-center p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition mb-2 choice-label" id="label-${index}-${cIndex}">
+                            <input type="radio" name="q${index}" value="${cIndex}" class="form-radio h-5 w-5 text-green-500 focus:ring-green-400 border-gray-300">
+                            <span class="ml-3 text-gray-700 text-lg">${choiceLetters[cIndex]} ${choice}</span>
+                        </label>
+                    `;
+                });
+
+                quizBox.innerHTML = `
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">${item.q}</h3>
+                    <div class="pl-2 space-y-2">
+                        ${choicesHTML}
+                    </div>
+                `;
+                container.appendChild(quizBox);
+            });
+        }
+
+        function checkQuiz() {
+            let score = 0;
+            
+            quizData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                const correctIndex = item.ans;
+                
+                // รีเซ็ตคลาสสีเก่าก่อน
+                for(let i=0; i<4; i++){
+                    const lbl = document.getElementById(`label-${index}-${i}`);
+                    if(lbl) {
+                        lbl.classList.remove('correct-answer', 'wrong-answer');
+                    }
+                }
+
+                if (selected) {
+                    const selectedValue = parseInt(selected.value);
+                    if (selectedValue === correctIndex) {
+                        score++;
+                        document.getElementById(`label-${index}-${selectedValue}`).classList.add('correct-answer');
+                    } else {
+                        document.getElementById(`label-${index}-${selectedValue}`).classList.add('wrong-answer');
+                        // โชว์ข้อถูกด้วย
+                        document.getElementById(`label-${index}-${correctIndex}`).classList.add('correct-answer');
+                    }
+                } else {
+                    // ถ้าไม่ได้ตอบ โชว์เฉลยไปเลย
+                    document.getElementById(`label-${index}-${correctIndex}`).classList.add('correct-answer');
+                }
+                
+                // ปิดการกด (Disable inputs)
+                const radios = document.querySelectorAll(`input[name="q${index}"]`);
+                radios.forEach(r => r.disabled = true);
+            });
+
+            // แสดงคะแนน
+            document.getElementById('quiz-score-display').innerText = score;
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            // ปิดปุ่มส่ง
+            document.getElementById('submit-quiz').disabled = true;
+            document.getElementById('submit-quiz').classList.add('opacity-50', 'cursor-not-allowed');
+            
+            // เล่นเสียง
+            if(score >= 5) {
+                playEffect('correct');
+            } else {
+                playEffect('wrong');
+            }
+
+            // เลื่อนจอลงมาให้เห็นคะแนน
+            document.getElementById('quiz-result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            renderVocab();
+            startGame();
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
